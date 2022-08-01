@@ -9,4 +9,26 @@
 
 <img src="prob1.png">
 
+### Introduction to HyperVisor 
+
+<img src="hyp.png">
+
+### from app point of view -- vm are heavy and having unwanted LIbs 
+
+<img src="app1.png">
+
+### app need few amount of resources and LIbs from OS 
+
+<img src="os.png">
+
+### Introduction to containers 
+
+<img src="cont1.png">
+
+### vm vs containers 
+
+<img src="vmcont1.png">
+
+
+
 
