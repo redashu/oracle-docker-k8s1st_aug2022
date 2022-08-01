@@ -449,6 +449,57 @@ Welcome to Oracle India ..
 Welcome to Containers ..!!
 ```
 
+### demo 3 dockerfile 
+
+```
+FROM oraclelinux:8.4
+LABEL name="ashutoshh"
+RUN yum install python3 -y && mkdir /mycode 
+ADD https://raw.githubusercontent.com/redashu/pythonLang/main/while.py /mycode/
+# copy and ADD both are same but add can accept URL as Source 
+CMD [ "python3","/mycode/while.py" ]
+```
+
+### learning of the day 
+
+<img src="lod.png">
+
+
+### Dockerfile -- CMD & ENTrypoint 
+
+```
+FROM oraclelinux:8.4
+LABEL name="ashutoshh"
+RUN yum install python3 -y && mkdir /mycode 
+ADD https://raw.githubusercontent.com/redashu/pythonLang/main/while.py /mycode/
+COPY hello.py  /mycode/
+# copy and ADD both are same but add can accept URL as Source 
+WORKDIR /mycode 
+# to change directory for containers like cd command in unix env 
+ENTRYPOINT [ "python3" ]
+CMD ["while.py"]
+# CMD is replace while creating container as last argument 
+# ENTRYPOINT is not replaceable while creating container as last argument
+
+
+```
+
+### lets build it 
+
+```
+docker build -t  python:ashucodev4  -f oracle.dockerfile .
+```
+
+### lets test it 
+
+```
+ 59  docker  run -itd --name test4  python:ashucodev4
+ docker  run -itd --name test5  python:ashucodev4  hello.py 
+ [root@docker-server docker]# docker  ps
+CONTAINER ID        IMAGE               COMMAND              CREATED              STATUS              PORTS               NAMES
+3c1f681aa057        python:ashucodev4   "python3 hello.py"   About a minute ago   Up About a minute                       test5
+501a74ed1e63        python:ashucodev4   "python3 while.py"   2 minutes ago        Up 2 minutes                            test4
+```
 
 
 
