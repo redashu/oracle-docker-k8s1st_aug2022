@@ -345,3 +345,53 @@ ashuc1
 ```
 
 
+
+## app containerization 
+
+### build & Run 
+
+<img src="run.png">
+
+### Dockerfile Demo 1 
+
+```
+FROM python
+# From docker hub this image will be pulled if not present 
+LABEL name="ashutoshh"
+LABEL email="ashutoshh@linux.com"
+# label is optional field but you can put your info for contact purpose 
+RUN mkdir /code  
+# it can run any command which is supported by From Image 
+COPY oracle.py /code/
+# to copy data from docker client to docker server during image build time
+CMD [ "python","/code/oracle.py" ]
+# CMD is used to fix default process of container 
+# docker run -d --name x1  myimg:v1  ping fb.com 
+
+```
+
+### lets build image 
+
+```
+[ashu@docker-server docker-images]$ cd  pythoncodes/
+[ashu@docker-server pythoncodes]$ ls
+Dockerfile  oracle.py
+[ashu@docker-server pythoncodes]$ docker  build  -t  python:ashucodev1 . 
+Sending build context to Docker daemon  3.072kB
+Step 1/6 : FROM python
+Trying to pull repository docker.io/library/python ... 
+latest: Pulling from docker.io/library/python
+d836772a1c1f: Pull complete 
+66a9e63c657a: Extracting  2.
+```
+
+### image list 
+
+```
+[ashu@docker-server pythoncodes]$ docker  images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+python              priyankacodev1      a6c8a919dfad        8 seconds ago       920MB
+python              ashucodev1          6b8d7b99edf1        9 seconds ago       920MB
+pyhton              vishwascodev1       b31f60baaad5        9 seconds ago       920MB
+```
+
