@@ -395,3 +395,19 @@ python              ashucodev1          6b8d7b99edf1        9 seconds ago       
 pyhton              vishwascodev1       b31f60baaad5        9 seconds ago       920MB
 ```
 
+### creating container from images 
+
+```
+[root@docker-server docker]# docker  run -itd --name ashuc4 python:ashucodev2
+e5f813e5d78cfd0e1304aa4e5c7535ce336f52c50de00011cffae47e623af7a9
+[root@docker-server docker]# docker logs -f  ashuc4 
+Hello all , welcome to python..!!
+Welcome to Oracle India ..
+Welcome to Containers ..!!
+______________________
+Hello all , welcome to python..!!
+^C
+[root@docker-server
+```
+
+
