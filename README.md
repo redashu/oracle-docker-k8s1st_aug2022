@@ -4,3 +4,9 @@
 
 <img src="plan.png">
 
+
+###  app testing / deployment related problems in History 
+
+<img src="prob1.png">
+
+
