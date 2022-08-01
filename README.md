@@ -27,7 +27,7 @@
 
 ### vm vs containers 
 
-<img src="vmcont1.png">
+<img src="vmcon1.png">
 
 
 
