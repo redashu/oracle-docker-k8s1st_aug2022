@@ -410,4 +410,45 @@ Hello all , welcome to python..!!
 [root@docker-server
 ```
 
+### solution to task 2 
+
+### Dockerfile content 
+
+```
+FROM alpine
+LABEL name="ashutoshh"
+RUN apk add python3 && mkdir /code 
+COPY oracle.py /code/
+ENTRYPOINT python3  /code/oracle.py 
+
+
+```
+-===
+```
+
+[ashu@docker-server pythoncodes]$ ls
+alpine.dockerfile  Dockerfile  oracle.py
+[ashu@docker-server pythoncodes]$ docker  build  -t  ashualp:pycodev1 -f alpine.dockerfile  . 
+Sending build context to Docker daemon  4.096kB
+Step 1/5 : FROM alpine
+ ---> d7d3d98c851f
+Step 2/5 : LABEL name="ashutoshh"
+ ---> Running in ad93549390bf
+Removing intermediate container ad93549390bf
+ ---> 69564ab06f46
+Step 3/5 : RUN apk add pyt
+```
+### creating container and checking output 
+
+```
+[ashu@docker-server pythoncodes]$ docker run -itd --name ashuxc1 ashualp:pycodev1 
+c1be7a96312b23d1908decd4ad7c2c5b948bf4631333dc3ec5ab6af1e8babd6c
+[ashu@docker-server pythoncodes]$ docker logs  ashuxc1 
+Hello all , welcome to python..!!
+Welcome to Oracle India ..
+Welcome to Containers ..!!
+```
+
+
+
 
