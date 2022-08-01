@@ -184,4 +184,56 @@ Server: Docker Engine - Community
 
 ```
 
+### pulling image from Docker hub 
+
+```
+[ashu@docker-server ~]$ docker  images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ docker  pull   mysql 
+Using default tag: latest
+Trying to pull repository docker.io/library/mysql ... 
+latest: Pulling from docker.io/library/mysql
+e54b73e95ef3: Pull complete 
+327840d38cb2: Pull complete 
+642077275f5f: Pull complete 
+e077469d560d: Pull complete 
+cbf214d981a6: Pull complete 
+f4fda5f8b9a8: Pull complete 
+a41c2763043b: Pull complete 
+f86b3df6abb1: Pull complete 
+95b1c2ed2ecf: Pull complete 
+b0edcd52771b: Pull complete 
+a3d312b5c835: Pull complete 
+Digest: sha256:657d78ee56e09101902673adcdd7d2bf03012e759c1aa525eeca28cb0fe1aa7d
+Status: Downloaded newer image for mysql:latest
+mysql:latest
+[ashu@docker-server ~]$ docker  images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+mysql               latest              38643ad93215        5 days ago          446MB
+[ashu@docker-server ~]$ 
+
+```
+
+### pulling images from different container registries
+
+```
+    6  docker  pull   mysql 
+    7  docker  images
+    8  history 
+    9  docker pull quay.io/jitesoft/nginx
+   10  docker images
+   11  docker pull container-registry.oracle.com/java/openjdk:latest
+   12  history 
+[ashu@docker-server ~]$ docker  images
+REPOSITORY                                   TAG                 IMAGE ID            CREATED             SIZE
+mysql                                        latest              38643ad93215        5 days ago          446MB
+quay.io/jitesoft/nginx                       latest              fe095d988a2a        11 days ago         50.8MB
+container-registry.oracle.com/java/openjdk   latest              a0a677f4434e        12 days ago         569MB
+[ashu@docker-server ~]$ 
+
+
+```
+
 
