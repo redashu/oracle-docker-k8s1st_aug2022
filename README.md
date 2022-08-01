@@ -236,4 +236,112 @@ container-registry.oracle.com/java/openjdk   latest              a0a677f4434e   
 
 ```
 
+### importance of process in container 
+
+<img src="proc.png">
+
+### creating containers 
+
+<img src="cont1.png">
+
+### creating first container 
+
+```
+[ashu@docker-server ~]$ docker  run  alpine:latest   cal 
+    August 2022
+Su Mo Tu We Th Fr Sa
+    1  2  3  4  5  6
+ 7  8  9 10 11 12 13
+14 15 16 17 18 19 20
+21 22 23 24 25 26 27
+28 29 30 31
+                     
+[ashu@docker-server ~]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                  PORTS               NAMES
+12ba14a8ab75        alpine:latest       "cal"               1 second ago        Up Less than a second                       nice_carson
+[ashu@docker-server ~]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+[ashu@docker-server ~]$ 
+
+
+
+```
+
+### best practise to give some name to containers 
+
+```
+[ashu@docker-server ~]$ docker  run --name ashuc1   alpine:latest   cal 
+    August 2022
+Su Mo Tu We Th Fr Sa
+    1  2  3  4  5  6
+ 7  8  9 10 11 12 13
+14 15 16 17 18 19 20
+21 22 23 24 25 26 27
+28 29 30 31
+                     
+[ashu@docker-server ~]$ docker  ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                      PORTS               NAMES
+631357712a71        alpine:latest       "cal"               5 seconds ago       Exited (0) 4 seconds ago                        ashuc1
+3fb37fa063a5        alpine              "env"               6 seconds ago       Exited (0) 5 seconds ago                        skotha1
+4700b2a043f5        alpine:latest       "cal"               19 seconds ago      Exited (0) 18 seconds ago                       uday
+571338ca2b06        alpine:latest       "cal"               21 seconds ago      Exited (0) 20 seconds ago                       mvu
+[ashu@docker-server ~]$ 
+
+
+```
+
+### best way to create contianer 
+
+```
+ashu@docker-server ~]$ docker  run --name ashuc1 -d    alpine:latest   ping www.google.com 
+63d292bcf988cb59c11d9b4b01ad3532146161102163dad1b45bc86fae2a53bf
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND                 CREATED             STATUS              PORTS               NAMES
+3375480fabf2        alpine:latest       "ping www.google.com"   3 seconds ago       Up 2 seconds                            priyamva
+63d292bcf988        alpine:latest       "ping www.google.com"   12 seconds ago      Up 11 seconds                           ashuc1
+[ashu@docker-server ~]$ 
+
+```
+
+### stop a running container 
+
+```
+[ashu@docker-server ~]$ docker  stop  ashuc1
+ashuc1
+
+```
+
+### starting container 
+
+```
+[ashu@docker-server ~]$ docker  start  ashuc1
+ashuc1
+```
+
+### we can get the shell of a running container 
+
+```
+[ashu@docker-server ~]$ docker exec -it  ashuc1  sh  
+/ # 
+/ # 
+/ # whoami
+root
+/ # ls 
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # exit
+
+
+```
+
+### how to remove container 
+
+```
+[ashu@docker-server ~]$ docker  stop  ashuc1
+ashuc1
+[ashu@docker-server ~]$ docker  rm  ashuc1 
+ashuc1
+```
+
 
