@@ -141,6 +141,22 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 ```
 
+### checking jdk version 
+
+```
+[root@docker-server ~]# docker  exec -it  ashut1  bash 
+bash-4.4# 
+bash-4.4# java -version 
+openjdk version "18.0.2" 2022-07-19
+OpenJDK Runtime Environment (build 18.0.2+9-61)
+OpenJDK 64-Bit Server VM (build 18.0.2+9-61, mixed mode, sharing)
+bash-4.4# exit
+[root@docker-server ~]# 
+
+
+```
+
+
 
 
 
