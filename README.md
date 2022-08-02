@@ -156,7 +156,69 @@ bash-4.4# exit
 
 ```
 
+### webapp in containers 
 
+### webservers
+
+<img src="web.png">
+
+### clone sample app code 
+
+```
+ashu@docker-server docker-images]$ mkdir webapps
+[ashu@docker-server docker-images]$ cd webapps/
+[ashu@docker-server webapps]$ git clone https://github.com/microsoft/project-html-website.git
+Cloning into 'project-html-website'...
+remote: Enumerating objects: 19, done.
+remote: Total 19 (delta 0), reused 0 (delta 0), pack-reused 19
+Unpacking objects: 100% (19/19), done.
+[ashu@docker-server webapps]$ ls
+project-html-website
+[ashu@docker-server webapps]$ 
+
+```
+
+### build 
+
+## Dockerfile 
+
+```
+FROM nginx
+LABEL email="ashutoshh@linux.com"
+COPY project-html-website /usr/share/nginx/html/
+# Note we if we are not using CMD / ENtrypoint then From image default cmd/entrypoint will 
+# be considered 
+
+```
+
+###
+
+```
+[ashu@docker-server webapps]$ ls
+Dockerfile  project-html-website
+[ashu@docker-server webapps]$ docker build  -t  ashuwebapp:v1  . 
+Sending build context to Docker daemon  1.405MB
+Step 1/3 : FROM nginx
+Trying to pull repository docker.io/library/nginx ... 
+latest: Pulling from docker.io/library/nginx
+461246efe0a7: Pull complete 
+060bfa6be22e: Pull complete 
+b34d5ba6fa9e: Pull complete 
+8128ac56c745: Pull complete 
+44d36245a8c9: Pull complete 
+ebcc2cc821e6: Pull complete 
+Digest: sha256:cf4eeae444277ad9f02df9c63afc60646fd9259784f729f4c3990cd957e5a6e5
+Status: Downloaded newer image for nginx:latest
+ ---> 670dcc86b69d
+Step 2/3 : LABEL email="ashutoshh@linux.com"
+ ---> Running in e0a26341fc5f
+Removing intermediate container e0a26341fc5f
+ ---> e9009d420917
+Step 3/3 : COPY project-html-website /usr/share/nginx/html/
+ ---> 07e1d52e636c
+Successfully built 07e1d52e636c
+Successfully tagged ashuwebapp:v1
+```
 
 
 
