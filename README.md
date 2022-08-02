@@ -537,4 +537,45 @@ ashuxc2             "/docker-entrypoint.…"   ashuappx2           running      
   206  docker-compose  -f multic.yaml  ps
 ```
 
+### compose containers 
+
+```
+version: '3.8'
+services:
+  ashudb: # db container 
+    image: mysql
+    container_name: ashudbc1 
+    environment:
+      MYSQL_ROOT_PASSWORD: "Docker@123#"
+    restart: always 
+  ashuwebapp: # webapp container 
+    image: adminer 
+    container_name: ashuwc1
+    ports:
+    - "1234:8080"
+    restart: always 
+    depends_on: # wait for ashudb service to come up then start this container 
+    - ashudb 
+```
+
+### ====>RUN it 
+
+```
+[ashu@docker-server ashu-compose]$ ls
+ashudbapp.yaml  docker-compose.yaml  multic.yaml  test.yaml
+[ashu@docker-server ashu-compose]$ docker-compose -f ashudbapp.yaml up -d
+[+] Running 3/3
+ ⠿ Network ashu-compose_default  Created                                                     0.1s
+ ⠿ Container ashudbc1            Started                                                     0.7s
+ ⠿ Container ashuwc1             Started                                                     1.4s
+[ashu@docker-server ashu-compose]$ docker-compose -f ashudbapp.yaml ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashudbc1            "docker-entrypoint.s…"   ashudb              running             3306/tcp, 33060/tcp
+ashuwc1             "entrypoint.sh docke…"   ashuwebapp          running             0.0.0.0:1234->8080/tcp
+
+```
+
+
+
+
 
