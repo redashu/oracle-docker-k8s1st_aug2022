@@ -266,6 +266,62 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 ```
 
+### Image sharing using Docker hUb registry 
 
+<img src="hub.png">
+
+## pushing image to docker hub 
+
+### tagging 
+
+```
+[root@docker-server ~]# docker  images  |   grep ashu
+ashuwebapp          v1                  07e1d52e636c        About an hour ago   143MB
+[root@docker-server ~]# 
+[root@docker-server ~]# 
+[root@docker-server ~]# docker  tag   ashuwebapp:v1  docker.io/dockerashu/ashuwebapp:v1  
+[root@docker-server ~]# 
+[root@docker-server ~]# docker  images  |   grep ashu
+dockerashu/ashuwebapp   v1                  07e1d52e636c        About an hour ago   143MB
+ashuwebapp              v1                  07e1d52e636c        About an hour ago   143MB
+[root@docker-server ~]# 
+
+
+```
+
+### login for authorization 
+
+```
+[root@docker-server ~]# docker login  
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: dockerashu
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+```
+### pushing 
+
+```
+[root@docker-server ~]# docker  push  docker.io/dockerashu/ashuwebapp:v1
+The push refers to repository [docker.io/dockerashu/ashuwebapp]
+2a027000aabd: Pushed 
+abc66ad258e9: Layer already exists 
+243243243ee2: Layer already exists 
+f931b78377da: Layer already exists 
+
+```
+
+### logout 
+
+```
+[root@docker-server ~]# docker logout 
+Removing login credentials for https://index.docker.io/v1/
+[root@docker-server ~]# 
+
+```
 
 
