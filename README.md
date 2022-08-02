@@ -120,6 +120,27 @@ Successfully tagged ashujavacode:v1
 
 ```
 
+### lets create container 
+
+```
+[root@docker-server ~]# docker images  |   grep -i ashu
+ashujavacode        v1                  153e6c357172        About a minute ago   464MB
+python              ashucodev4          9b40bc78f123        18 hours ago         438MB
+python              ashucodev3          40300cfc3d1a        18 hours ago         438MB
+python              ashucodev2          a794deeb7a21        18 hours ago         438MB
+ashualp             pycodev1            95fa69ce0e87        19 hours ago         55.8MB
+python              ashucodev1          99caa1a336e5        19 hours ago         920MB
+[root@docker-server ~]# 
+[root@docker-server ~]# docker run -itd --name ashut1  ashujavacode:v1  
+805ce0b7001111de9635432db6e0a1974197200669afb2cc6687a78ea7b5f696
+[root@docker-server ~]# docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+805ce0b70011        ashujavacode:v1     "java myclass"      2 seconds ago       Up 2 seconds                            ashut1
+61fd4822302e        suresh:myjava       "java Test"         2 minutes ago       Up 2 minutes                            SureshJava
+[root@docker-server ~]# docker logs  ashut1 
+
+```
+
 
 
 
