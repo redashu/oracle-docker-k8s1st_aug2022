@@ -377,6 +377,112 @@ Removing login credentials for https://index.docker.io/v1/
 
 ```
 
+### Docker compose -- the scripting and ISOlation for projects 
+
+<img src="compose.png">
+
+### install docker-compose 
+
+```
+[root@docker-server ~]# curl -SL https://github.com/docker/compose/releases/download/v2.7.0/docker-compose-linux-x86_64 -o /usr/bin/docker-compose 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 24.5M  100 24.5M    0     0  12.2M      0  0:00:02  0:00:02 --:--:-- 19.5M
+[root@docker-server ~]# 
+[root@docker-server ~]# 
+[root@docker-server ~]# chmod +x /usr/bin/docker-compose 
+[root@docker-server ~]# 
+[root@docker-server ~]# docker-compose version 
+Docker Compose version v2.7.0
+[root@docker-server ~]# 
+
+```
+
+### more info about docker compose 
+
+<img src="compose1.png">
+
+### Example 1 
+
+```
+version: '3.8' # compose file version 
+services: # your application stack 
+  ashuapp1: 
+    image: alpine
+    container_name: ashuc1
+    command: ping fb.com 
+    restart: always 
+
+```
+
+### lets run 
+
+```
+[ashu@docker-server docker-images]$ cd  ashu-compose/
+[ashu@docker-server ashu-compose]$ ls
+docker-compose.yaml
+[ashu@docker-server ashu-compose]$ docker-compose up -d 
+[+] Running 2/2
+ ⠿ ashuapp1 Pulled                                                                               1.7s
+   ⠿ 530afca65e2e Pull complete                                                                  0.6s
+[+] Running 2/2
+ ⠿ Network ashu-compose_default  Created                                                         0.2s
+ ⠿ Container ashuc1              Started                                                         0.8s
+[ashu@docker-server ashu-compose]$ docker-compose ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashuc1              "ping fb.com"       ashuapp1            running             
+[ashu@docker-server ashu-compose]$ 
+
+```
+
+### more compose commands 
+
+```
+[ashu@docker-server ashu-compose]$ ls
+docker-compose.yaml
+[ashu@docker-server ashu-compose]$ docker-compose  ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashuc1              "ping fb.com"       ashuapp1            running             
+[ashu@docker-server ashu-compose]$ docker-compose  stop 
+[+] Running 1/1
+ ⠿ Container ashuc1  Stopped                                                                                        10.5s
+[ashu@docker-server ashu-compose]$ docker-compose  ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashuc1              "ping fb.com"       ashuapp1            exited (137)        
+[ashu@docker-server ashu-compose]$ docker-compose  start
+[+] Running 1/1
+ ⠿ Container ashuc1  Started                                                                                         0.6s
+[ashu@docker-server ashu-compose]$ docker-compose  ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashuc1              "ping fb.com"       ashuapp1            running             
+[ashu@docker-server ashu-compose]$ 
+```
+
+### accessing service container 
+
+```
+[ashu@docker-server ashu-compose]$ docker-compose  ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashuc1              "ping fb.com"       ashuapp1            running             
+[ashu@docker-server ashu-compose]$ docker-compose  exec -it  ashuapp1  sh 
+/ # 
+/ # 
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # exit
+[ashu@docker-server ashu-compose]$ 
+```
+
+### deleting all things related to compsoe creation 
+
+```
+[ashu@docker-server ashu-compose]$ docker-compose  down 
+[+] Running 2/2
+ ⠿ Container ashuc1              Removed                                                                            10.4s
+ ⠿ Network ashu-compose_default  Removed    
+```
+
 
 
 
