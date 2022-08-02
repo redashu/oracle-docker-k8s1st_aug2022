@@ -324,4 +324,59 @@ Removing login credentials for https://index.docker.io/v1/
 
 ```
 
+### solution 4 
+
+```
+[root@docker-server ~]# docker run -it --name ashucimg oraclelinux:8.4  
+[root@82f85446aee5 /]# 
+[root@82f85446aee5 /]# yum install vim httpd -y &>/dev/null 
+[root@82f85446aee5 /]# 
+[root@82f85446aee5 /]# yum install vim httpd -y             
+Last metadata expiration check: 0:00:27 ago on Tue Aug  2 07:29:12 2022.
+Package vim-enhanced-2:8.0.1763-19.0.1.el8_6.2.x86_64 is already installed.
+Package httpd-2.4.37-47.0.1.module+el8.6.0+20683+407db9f5.2.x86_64 is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!
+[root@82f85446aee5 /]# exit
+exit
+[root@docker-server ~]# docker commit ashucimg  ashucming:v007 
+sha256:40be31740f57be08b3526b3da42ef3b4e8be670f1163437d102e5d7c6109d266
+[root@docker-server ~]# docker  images  |  grep ashu
+ashucming                    v007                40be31740f57        17 seconds ago       497MB
+ashuwebapp                   v1                  07e1d52e636c        2 hours ago          143MB
+dockerashu/ashuwebapp        v1                  07e1d52e636c        2 hours ago          143MB
+dockerashu/udaywebapp1       v1                  07e1d52e636c        2 hours ago          143MB
+dockermeena/ashuwebapp       v1                  07e1d52e636c        2 hours ago          143MB
+[root@docker-server ~]# docker run -itd --name ashuxt1  ashucming:v007  
+765d2d8f84f5c3d959cc7a2f87869e84f478c3ab1a11a1d91050f5736949a469
+[root@docker-server ~]# docker  update  --restart always  ashuxt1 
+ashuxt1
+[root@docker-server ~]# docker  inspect ashuxt1 
+[
+
+===
+[root@docker-server ~]# docker  tag  ashucming:v007  docker.io/dockerashu/ashucming:v007
+[root@docker-server ~]# 
+[root@docker-server ~]# docker login -u dockerashu
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[root@docker-server ~]# docker push  docker.io/dockerashu/ashucming:v007
+The push refers to repository [docker.io/dockerashu/ashucming]
+bd70798e28fa: Pushed 
+2d3586eacb61: Mounted from dockerhubpj/priyankacimg 
+v007: digest: sha256:2a60dff0d05751e797b38876dc0be326e256a58224e18e38b3e4aa2cbb4b0d59 size: 742
+[root@docker-server ~]# docker logout 
+Removing login credentials for https://index.docker.io/v1/
+[root@docker-server ~]# 
+
+
+```
+
+
+
 
