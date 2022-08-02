@@ -47,6 +47,78 @@ always
 
 ```
 
+### BUild sample java code to docker image 
+
+### code 
+
+```
+
+class myclass { 
+    public static void main(String args[]) 
+    { 
+        // test expression 
+        while (true) { 
+            System.out.println("Hello World welcome to containers ! "); 
+  
+            // update expression 
+        } 
+    } 
+} 
+```
+
+### Dockerfile 
+
+```
+FROM openjdk
+LABEL name=ashutoshh
+RUN mkdir /mycode 
+COPY test.java /mycode/
+WORKDIR /mycode
+RUN javac test.java 
+# to compile java code 
+CMD [ "java","myclass" ]
+
+
+```
+
+### lets build it 
+
+```
+[ashu@docker-server docker-images]$ ls
+javacode  nodecode  pythoncodes
+[ashu@docker-server docker-images]$ cd  javacode/
+[ashu@docker-server javacode]$ ls
+Dockerfile  test.java
+[ashu@docker-server javacode]$ docker  build -t  ashujavacode:v1 . 
+Sending build context to Docker daemon  3.072kB
+Step 1/7 : FROM openjdk
+ ---> 04bf630c9556
+Step 2/7 : LABEL name=ashutoshh
+ ---> Running in c456d6d20c68
+Removing intermediate container c456d6d20c68
+ ---> a18246c07ce2
+Step 3/7 : RUN mkdir /mycode
+ ---> Running in 638d29fcbbc9
+Removing intermediate container 638d29fcbbc9
+ ---> 5264baea515e
+Step 4/7 : COPY test.java /mycode/
+ ---> 2c7cb82bbad3
+Step 5/7 : WORKDIR /mycode
+ ---> Running in 2099f89df1c0
+Removing intermediate container 2099f89df1c0
+ ---> b52face723e1
+Step 6/7 : RUN javac test.java
+ ---> Running in 66715fbe7d4c
+Removing intermediate container 66715fbe7d4c
+ ---> 3e1dc9946d35
+Step 7/7 : CMD [ "java","myclass" ]
+ ---> Running in ad0797d8fa3d
+Removing intermediate container ad0797d8fa3d
+ ---> 153e6c357172
+Successfully built 153e6c357172
+Successfully tagged ashujavacode:v1
+
+```
 
 
 
