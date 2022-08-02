@@ -483,6 +483,58 @@ bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbi
  ⠿ Network ashu-compose_default  Removed    
 ```
 
+### Demo 2 
 
+```
+version: '3.8'
+services:
+  ashuappx1:
+    image: alpine
+    container_name: ashuxc1
+    command: ping fb.com 
+    restart: always 
+  ashuappx2:
+    image: nginx
+    container_name: ashuxc2 
+    ports:
+    - "1234:80"
+    restart: always 
+```
+
+### lets run it 
+
+```
+[ashu@docker-server ashu-compose]$ docker-compose down 
+[ashu@docker-server ashu-compose]$ docker-compose  -f multic.yaml  up  -d 
+[+] Running 3/3
+ ⠿ Network ashu-compose_default  Created                                                     0.1s
+ ⠿ Container ashuxc2             Started                                                     1.1s
+ ⠿ Container ashuxc1             Started                                                     0.9s
+[ashu@docker-server ashu-compose]$ docker-compose  -f multic.yaml  ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuxc1             "ping fb.com"            ashuappx1           running             
+ashuxc2             "/docker-entrypoint.…"   ashuappx2           running             0.0.0.0:1234->80/tcp
+[ashu@docker-server ashu-compose]$ 
+
+
+
+```
+
+### more commands 
+
+```
+ 195  docker-compose  -f multic.yaml  up  -d 
+  196  docker-compose  -f multic.yaml  ps
+  197  docker-compose  -f multic.yaml  stop 
+  198  docker-compose  -f multic.yaml  ps
+  199  docker-compose  -f multic.yaml  start
+  200  docker-compose  -f multic.yaml  down
+  201  docker-compose  -f multic.yaml  up -d
+  202  docker-compose  -f multic.yaml  ps
+  203  docker-compose  -f multic.yaml  stop  ashuappx1
+  204  docker-compose  -f multic.yaml  ps
+  205  docker-compose  -f multic.yaml  start  ashuappx1
+  206  docker-compose  -f multic.yaml  ps
+```
 
 
