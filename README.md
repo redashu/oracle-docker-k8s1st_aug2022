@@ -2,5 +2,7 @@
 
 ### training plan 
 
-<img src="plan.png">
+<img src="plan.png"/>
+
+
 
