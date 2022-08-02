@@ -575,7 +575,126 @@ ashuwc1             "entrypoint.sh docke…"   ashuwebapp          running      
 
 ```
 
+### docker container apps with customer story 
 
+<img src="customer1.png">
+
+### clone 3 sample webapps 
+
+```
+227  git clone https://github.com/microsoft/project-html-website.git
+  228  git clone https://github.com/schoolofdevops/html-sample-app.git
+  229  git clone https://github.com/yenchiah/project-website-template.git
+```
+
+### Dockerfile 
+
+```
+FROM oraclelinux:8.4
+LABEL name="ashutoshh"
+LABEL email="ashutoshh@linux.com"
+ENV app_deploy=1000
+# defining env which we can use in your process 
+RUN yum install httpd -y && mkdir /apps  /apps/app1 /apps/app2 /apps/app3 
+COPY html-sample-app /apps/app1/
+COPY project-html-website /apps/app2/
+ADD project-website-template /apps/app3/
+COPY deploy.sh /apps/
+WORKDIR /apps
+RUN chmod +x deploy.sh 
+ENTRYPOINT ["./deploy.sh"]
+
+
+```
+
+### dockerignore 
+
+```
+html-sample-app/.git
+html-sample-app/*.txt
+project-html-website/.git
+project-html-website/LICENSE
+project-html-website/README.md
+project-website-template/.git
+project-website-template/.gitignore
+project-website-template/LICENSE
+project-website-template/README.md 
+
+
+```
+
+### shell script 
+
+```
+#!/bin/bash
+
+if  [  "$app_deploy" == "app1"  ]
+then
+    cp -rf /apps/app1/*  /var/www/html/
+    httpd -DFOREGROUND # to start httpd server 
+elif [  "$app_deploy" == "app2"  ]
+then
+    cp -rf /apps/app2/*  /var/www/html/
+    httpd -DFOREGROUND
+elif [  "$app_deploy" == "app3"  ]
+then
+    cp -rf /apps/app3/*  /var/www/html/
+    httpd -DFOREGROUND
+else 
+    echo "Wrong variable or value" >/var/www/html/index.html
+    httpd -DFOREGROUND
+fi
+
+```
+
+
+
+### compose file 
+
+```
+version: '3.8'
+services:
+  ashucustomapp:
+    image:  ashucustomerapp:v1  # this image we want to build
+    build: . # calling dockerfile in current location 
+    container_name: ashuwc11
+    ports:
+    - "1234:80"
+    restart: always 
+    environment:
+      app_deploy: app1 # want to deploy app 3 
+```
+
+
+### lets run it 
+
+```
+[ashu@docker-server ashu-compose]$ docker-compose -f customer1app.yaml up -d 
+[+] Running 0/1
+ ⠦ ashucustomapp Pulling                                                                     0.7s
+[+] Building 11.6s (5/12)                                                                         
+ => [internal] load build definition from Dockerfile                                         0.0s
+ => => transferring dockerfile: 520B                                                         0.0s
+ => [internal] load .dockerignore                                                            0.0s
+ => => transferring context: 366B                                                            0.0s
+ => [internal] load metadata for docker.io/library/oraclelinux:8.4                           0.0s
+ => [internal] load build context                                                            0.1s
+ => => transferring context: 4.03MB                                                          0.1s
+ => [1/8] FROM docker.io/library/oraclelinux:8.4                                             0.0s
+ => => resolve docker.io/library/oraclelinux:8.4                                             0.0s
+ => [2/8] RUN yum install httpd -y && mkdir /apps  /apps/app1 /apps/app2 /apps/app3         11.5s
+ => => # Oracle Linux 8 BaseOS Latest (x86_64)           195 MB/s |  48 MB     00:00             
+ => => # Oracle Linux 8 Application Stream (x86_64)      184 MB/s |  37 MB     00:00             
+
+```
+
+###
+
+```
+[ashu@docker-server ashu-compose]$ docker-compose -f customer1app.yaml ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+ashuwc11            "./deploy.sh"       ashucustomapp       running             0.0.0.0:1234->80/tcp
+```
 
 
 
