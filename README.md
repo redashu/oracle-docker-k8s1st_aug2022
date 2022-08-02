@@ -220,5 +220,52 @@ Successfully built 07e1d52e636c
 Successfully tagged ashuwebapp:v1
 ```
 
+### docker networking 
+
+<img src="net.png">
+
+##
+
+```
+[root@docker-server ~]# docker  network  ls
+NETWORK ID          NAME                DRIVER              SCOPE
+9fb9ad1fc1c7        bridge              bridge              local
+f9f782054aa6        host                host                local
+6fb3392045ca        none                null                local
+[root@docker-server ~]# docker  network inspect bridge 
+[
+    {
+        "Name": "bridge",
+        "Id": "9fb9ad1fc1c788cec4a5e76fc9b3a5e1557819fae8fa9ea3f66a691aec1173ba",
+        "Created": "2022-08-02T04:48:38.936631213Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+
+```
+
+### creating container with port forwarding option
+
+```
+[root@docker-server ~]# docker  images  |   grep ashu
+ashuwebapp          v1                  07e1d52e636c        31 minutes ago      143MB
+[root@docker-server ~]# docker  run -d  --name ashuwc1  -p  1234:80  ashuwebapp:v1 
+7e9a78b74c2b15db624ab6973c3eabb8555fdfe5ff7dd5c6ef3947387eaa838b
+[root@docker-server ~]# docker  ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                            NAMES
+7e9a78b74c2b        ashuwebapp:v1       "/docker-entrypoint.…"   3 seconds ago       Up 3 seconds        0.0.0.0:1234->80/tcp             ashuwc1
+
+```
+
+
 
 
