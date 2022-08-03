@@ -243,3 +243,29 @@ mkdir: can't create directory 'd2/helllo': Read-only file system
 
 ```
 
+### using host directory to use a volume 
+
+```
+ 287  cd /mnt/
+  288  ls
+  289  git clone https://github.com/microsoft/project-html-website.git
+  290  ls
+  291  cd project-html-website/
+  292  ls
+  293  pwd
+  294  docker run -d  --name cc11 -v /mnt/project-html-website:/usr/share/nginx/html/:ro -p 1234:80 nginx 
+  295  ls
+
+```
+
+### webUI for docker host using portainer 
+
+```
+
+[root@docker-server ~]# docker  run -d --name webui --restart always -p 1101:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer 
+Unable to find image 'portainer/portainer:latest' locally
+Trying to pull repository docker.io/portainer/portainer ... 
+latest: Pulling from docker.io/portainer/portai
+```
+
+
