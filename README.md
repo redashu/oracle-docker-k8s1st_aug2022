@@ -163,5 +163,47 @@ bash-4.4# exit
 
 ```
 
+### compose file for MYSQL and Postgres 
+
+```
+version:  '3.8'
+volumes: # creating volume 
+  ashudbvol111: # name of volume 
+  ashudbvol222: # creating another volume 
+services:
+  ashudbmysql1: # mysql db 
+    image: mysql
+    container_name: ashudbc2
+    restart: always 
+    volumes:
+    - "ashudbvol222:/var/lib/mysql/"
+    environment: 
+      MYSQL_ROOT_PASSWORD: "Oracle@123"
+  ashudbapp1: # postgres DB 
+    image: postgres
+    container_name: ashudbc1
+    volumes:
+    - "ashudbvol111:/var/lib/postgresql/data/"
+    restart: always 
+    environment:
+      POSTGRES_PASSWORD: "Oracle@123"
+```
+
+
+### lets run it 
+
+```
+[ashu@docker-server ashu-compose]$ docker-compose -f postgres.yaml up -d
+[+] Running 5/5
+ ⠿ Network ashu-compose_default        Created                                               0.1s
+ ⠿ Volume "ashu-compose_ashudbvol222"  Created                                               0.0s
+ ⠿ Volume "ashu-compose_ashudbvol111"  Created                                               0.0s
+ ⠿ Container ashudbc1                  Started                                               0.9s
+ ⠿ Container ashudbc2                  Started                                               0.7s
+[ashu@docker-server ashu-compose]$ docker-compose -f postgres.yaml ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashudbc1            "docker-entrypoint.s…"   ashudbapp1          running             5432/tcp
+ashudbc2            "docker-entrypoint.s…"   ashudbmysql1        running             3306/tcp, 33060/tcp
+```
 
 
