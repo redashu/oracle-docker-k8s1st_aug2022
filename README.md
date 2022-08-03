@@ -268,4 +268,92 @@ Trying to pull repository docker.io/portainer/portainer ...
 latest: Pulling from docker.io/portainer/portai
 ```
 
+### Understanding problems with container Runtime 
+
+<img src="prob.png">
+
+### problems with containers 
+
+<img src="prob1.png">
+
+### intro about k8s 
+
+<img src="intro.png">
+
+### hardware  / vm level infra
+
+<img src="infra.png">
+
+### control plane -- api-server
+
+<img src="api.png">
+
+### install kubectl -- which is k8s client 
+
+```
+[root@docker-server ~]# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   154  100   154    0     0    823      0 --:--:-- --:--:-- --:--:--   827
+100 43.5M  100 43.5M    0     0  84.5M      0 --:--:-- --:--:-- --:--:-- 84.5M
+[root@docker-server ~]# ls
+Nodejs  kubectl
+[root@docker-server ~]# mv kubectl /usr/bin/
+[root@docker-server ~]# chmod +x /usr/bin/kubectl 
+[root@docker-server ~]# 
+[root@docker-server ~]# kubectl version --client 
+WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short.  Use --output=yaml|json to get the full version.
+Client Version: version.Info{Major:"1", Minor:"24", GitVersion:"v1.24.3", GitCommit:"aef86a93758dc3cb2c658dd9657ab4ad4afc21cb", GitTreeState:"clean", BuildDate:"2022-07-13T14:30:46Z", GoVersion:"go1.18.3", Compiler:"gc", Platform:"linux/amd64"}
+Kustomize Version: v4.5.4
+[root@docker-server ~]# kubectl version --client  -o yaml 
+clientVersion:
+  buildDate: "2022-07-13T14:30:46Z"
+  compiler: gc
+  gitCommit: aef86a93758dc3cb2c658dd9657ab4ad4afc21cb
+  gitTreeState: clean
+  gitVersion: v1.24.3
+  goVersion: go1.18.3
+  major: "1"
+  minor: "24"
+  platform: linux/amd64
+kustomizeVersion: v4.5.4
+
+```
+
+### sending first request to kube-apiserver -- using kubectl 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  nodes --kubeconfig admin.conf 
+NAME            STATUS   ROLES           AGE     VERSION
+control-plane   Ready    control-plane   7d23h   v1.24.3
+workernode1     Ready    <none>          7d23h   v1.24.3
+workernode2     Ready    <none>          7d23h   v1.24.3
+```
+
+### copy admin.conf to the right location 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl  cluster-info  --kubeconfig admin.conf 
+Kubernetes control plane is running at https://44.207.217.46:6443
+CoreDNS is running at https://44.207.217.46:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+[ashu@docker-server k8s-app-deploy]$ mkdir  ~/.kube 
+mkdir: cannot create directory ‘/home/ashu/.kube’: File exists
+[ashu@docker-server k8s-app-deploy]$ 
+[ashu@docker-server k8s-app-deploy]$ cp -v admin.conf   ~/.kube/config  
+‘admin.conf’ -> ‘/home/ashu/.kube/config’
+[ashu@docker-server k8s-app-deploy]$ 
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  nodes
+NAME            STATUS   ROLES           AGE     VERSION
+control-plane   Ready    control-plane   7d23h   v1.24.3
+workernode1     Ready    <none>          7d23h   v1.24.3
+workernode2     Ready    <none>          7d23h   v1.24.3
+```
+
+### etcd 
+
+<img src="apis.png">
+
+
 
