@@ -412,4 +412,71 @@ sureshpod1        1/1     Running   0          2m18s   192.168.212.19    workern
 
 ```
 
+### checking logs fo pods 
 
+```
+[ashu@docker-server ~]$ kubectl  logs ashupod-123
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2022/08/03 11:13:43 [notice] 1#1: using the "epoll" event method
+2022/08/03 11:13:43 [notice] 1#1: nginx/1.23.1
+2022/08/03 11:13:43 [notice] 1#1: built by gcc 10.2.1 20210110 (Debian 10.2.1-6) 
+2022/08/03 11:13:43 [notice] 1#1: OS: Linux 5.10.118-111.515.amzn2.x86_64
+2022/08/03 11:13:43 [notice] 1#1: getrlimit
+```
+
+### using describe pod 
+
+```
+[ashu@docker-server ~]$ kubectl  describe pod ashupod-123
+Name:         ashupod-123
+Namespace:    default
+Priority:     0
+Node:         workernode1/172.31.88.154
+Start Time:   Wed, 03 Aug 2022 11:13:42 +0000
+Labels:       <none>
+Annotations:  cni.projectcalico.org/containerID: 41edfeb54f1bb30edb1b6515e315fd34df36d79a275e898cee95d5b8f56007b7
+              cni.projectcalico.org/podIP: 192.168.212.31/32
+              cni.projectcalico.org/podIPs: 192.168.212.31/32
+Status:       Running
+IP:           192.168.212.31
+IPs:
+  IP:  192.168.212.31
+Containers:
+
+```
+
+### access container inside pod 
+
+```
+[ashu@docker-server ~]$ kubectl   exec -it  ashupod-123   -- sh 
+# 
+# cat  /etc/os-release 
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+VERSION="11 (bullseye)"
+VERSION_CODENAME=bullseye
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+# ls
+bin   dev		   docker-entrypoint.sh  home  lib64  mnt  proc  run   srv  tmp  var
+boot  docker-entrypoint.d  etc			 lib   media  opt  root  sbin  sys  usr
+# exit
+
+```
+
+### deleting pods 
+
+```
+[ashu@docker-server ~]$ kubectl delete pod ashupod-123
+pod "ashupod-123" deleted
+```
