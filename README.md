@@ -355,5 +355,61 @@ workernode2     Ready    <none>          7d23h   v1.24.3
 
 <img src="apis.png">
 
+### introduction to Pod 
+
+<img src="pod.png">
+
+### FIRst YAML POD resource file 
+
+```
+apiVersion: v1 # apiVersion 
+kind: Pod # resource type 
+metadata: # info about resource 
+  name: ashupod-123 # name of pod 
+spec: # info about application 
+  containers: # info about container 
+  - image: nginx
+    name: ashuc1
+    ports:
+    - containerPort: 80 
+```
+
+### test syntax 
+
+```
+[ashu@docker-server k8s-app-deploy]$ ls
+ashupod1.yaml
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f  ashupod1.yaml --dry-run=client 
+pod/ashupod-123 created (dry run)
+[ashu@docker-server k8s-app-deploy]$ 
+
+
+```
+
+### Sending request to create pods 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f  ashupod1.yaml 
+pod/ashupod-123 created
+[ashu@docker-server k8s-app-deploy]$ kubectl   get  pods 
+NAME              READY   STATUS    RESTARTS   AGE
+ashupod-123       1/1     Running   0          13s
+priyankapod-123   1/1     Running   0          7s
+sureshpod1        1/1     Running   0          94s
+[ashu@docker-server k8s-app-deploy]$ 
+
+```
+
+###
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl   get  pods  -o wide
+NAME              READY   STATUS    RESTARTS   AGE     IP                NODE          NOMINATED NODE   READINESS GATES
+ashupod-123       1/1     Running   0          57s     192.168.212.31    workernode1   <none>           <none>
+priyankapod-123   1/1     Running   0          51s     192.168.216.113   workernode2   <none>           <none>
+sureshpod1        1/1     Running   0          2m18s   192.168.212.19    workernode1   <none>           <none>
+[ashu@docker-server k8s-app-deploy]$ 
+
+```
 
 
