@@ -206,4 +206,40 @@ ashudbc1            "docker-entrypoint.s…"   ashudbapp1          running      
 ashudbc2            "docker-entrypoint.s…"   ashudbmysql1        running             3306/tcp, 33060/tcp
 ```
 
+### more docker volume cases 
+
+```
+[root@docker-server ~]# docker volume  create ashuvol1 
+ashuvol1
+[root@docker-server ~]# docker volume  create ashuvol2
+ashuvol2
+[root@docker-server ~]# 
+[root@docker-server ~]# docker  run -dit  --name c1  -v ashuvol1:/mnt/d1:rw   alpine 
+69f61107553148e119572acd01b6244cf9d430028f9ee128b7e6878a332fae3b
+[root@docker-server ~]# 
+[root@docker-server ~]# 
+[root@docker-server ~]# docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+69f611075531        alpine              "/bin/sh"           4 seconds ago       Up 3 seconds                            c1
+[root@docker-server ~]# 
+[root@docker-server ~]# 
+[root@docker-server ~]# 
+[root@docker-server ~]# docker  run -dit  --name c2  -v ashuvol1:/mnt/d1:rw  -v ashuvol2:/mnt/d2:ro    alpine 
+17660a32b226df39250dc8190069581dc5c9954cb707ce8e394fa7a493629057
+[root@docker-server ~]# docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+17660a32b226        alpine              "/bin/sh"           3 seconds ago       Up 2 seconds                            c2
+69f611075531        alpine              "/bin/sh"           37 seconds ago      Up 35 seconds                           c1
+
+
+[root@docker-server ~]# docker  exec -it c2  sh 
+/ # cd /mnt/
+/mnt # ls
+d1  d2
+/mnt # mkdir d1/helllo
+/mnt # mkdir d2/helllo
+mkdir: can't create directory 'd2/helllo': Read-only file system
+/mnt # exit
+
+```
 
