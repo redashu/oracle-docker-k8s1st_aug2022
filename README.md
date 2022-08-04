@@ -99,4 +99,71 @@ pod "priyampod1" deleted
 
 ```
 
+###  CMD & ENTRYpoint  vs args & command 
 
+<img src="podproc.png">
+
+
+### using command from cli 
+
+```
+kubectl run x1 --image=busybox  --command ping fb.com --dry-run=client -o yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: x1
+  name: x1
+spec:
+  containers:
+  - command:
+    - ping
+    - fb.com
+    image: busybox
+    name: x1
+
+```
+
+### alternativ way 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashutoshhpod1
+  name: ashutoshhpod1
+spec:
+  containers:
+  - image: busybox
+    name: ashutoshhpod1
+    command: ["sh","-c","ping fb.com"] # in array format 
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+
+### history 
+
+```
+  378  kubectl run x1 --image=busybox  --command ping fb.com --dry-run=client -o yaml 
+  379  kubectl  get po 
+  380  kubectl logs  ashutoshhpod1 
+  381  kubectl logs  ashutoshhpod1  >logs.txt
+  382  hsitor
+  383  history 
+  384  ls
+  385  kubectl exec -it  ashutoshhpod1 -- sh 
+  386  kubectl cp logs.txt ashutoshhpod1:/opt/
+  387  kubectl exec -it  ashutoshhpod1 -- ls /opt
+  388  kubectl get po ashutoshhpod1 -o wide
+  389  kubectl exec -it ashutoshhpod1 -- sh 
+  390  history 
+  391  kubectl exec -it  ashutoshhpod1 --  echo hello  >>/opt/logs.txt
+  392  kubectl exec -it  ashutoshhpod1 --  sh -c 'echo hello  >>/opt/logs.txt'
+  393  kubectl exec -it ashutoshhpod1 -- cat /opt/logs.txt 
+```
