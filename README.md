@@ -300,3 +300,89 @@ kube-node-lease        Active   6h44m
 kube-public            Active   6h44m
 ```
 
+### deploying webapp pod and service both 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f webapp.yaml  -f nodeportsvc.yaml 
+pod/ashuwebapp created
+service/ashusvc1 created
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  po 
+NAME         READY   STATUS    RESTARTS   AGE
+ashuwebapp   1/1     Running   0          4s
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  svc
+NAME       TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+ashusvc1   NodePort   10.111.0.34   <none>        80:30482/TCP   8s
+[ashu@docker-server k8s-app-deploy]$ 
+
+```
+
+### understanding deletion 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl delete -f webapp.yaml -f nodeportsvc.yaml 
+pod "ashuwebapp" deleted
+service "ashusvc1" deleted
+
+```
+
+### merging multiple YAML files into single one 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashuwebapp
+  name: ashuwebapp
+spec:
+  containers:
+  - image: dockerashu/ashucustomer:v1
+    name: ashuwebapp
+    ports:
+    - containerPort: 80
+    resources: {}
+    env: # for placing value of ENV variable
+    - name: deploy # name of env in Docker image 
+      value: webapp2 # value to deploy app 2 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+# adding service yaml also 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashuwebapp
+  name: ashusvc1
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: ashuwebapp
+  type: NodePort
+status:
+  loadBalancer: {}
+```
+
+===
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f app.yaml 
+pod/ashuwebapp created
+service/ashusvc1 created
+[ashu@docker-server k8s-app-deploy]$ kubectl  get po,svc
+NAME             READY   STATUS    RESTARTS   AGE
+pod/ashuwebapp   1/1     Running   0          4s
+
+NAME               TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/ashusvc1   NodePort   10.110.158.66   <none>        80:30981/TCP   4s
+[ashu@docker-server k8s-app-deploy]$ 
+```
+
+
