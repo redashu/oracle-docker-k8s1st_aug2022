@@ -43,3 +43,9 @@ commit: 62e108c3dfdec8029a890ad6d8ef96b6461426dc
 
 ```
 
+
+### setup k8s multinode cluster using kubeadm -- 
+
+[Vidoe_link](https://www.youtube.com/watch?v=TTzbQdu30YA&t=24s)
+
+
