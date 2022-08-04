@@ -48,4 +48,43 @@ commit: 62e108c3dfdec8029a890ad6d8ef96b6461426dc
 
 [Vidoe_link](https://www.youtube.com/watch?v=TTzbQdu30YA&t=24s)
 
+### auto generating YAML / JSON files for k8s resources 
+
+### pod 
+
+```
+[ashu@docker-server ~]$ kubectl  run  ashupod1  --image=nginx --port 80 --dry-run=client -o yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod1
+  name: ashupod1
+spec:
+  containers:
+  - image: nginx
+    name: ashupod1
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+
+### saving yaml in a file and deploy it 
+
+```
+ kubectl  run  ashupod1  --image=nginx --port 80 --dry-run=client -o yaml  >autopod.yaml
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f autopod.yaml 
+pod/ashupod1 created
+[ashu@docker-server k8s-app-deploy]$ kubectl get  po 
+NAME       READY   STATUS              RESTARTS   AGE
+ashupod1   1/1     Running             0          15s
+udaypod1   0/1     ContainerCreating   0          1s
+[ashu@docker-server k8s-app-deploy]$ 
+```
+
 
