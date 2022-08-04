@@ -385,4 +385,74 @@ service/ashusvc1   NodePort   10.110.158.66   <none>        80:30981/TCP   4s
 [ashu@docker-server k8s-app-deploy]$ 
 ```
 
+### solution to question 
 
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashuk8s1
+spec: {}
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod1
+  name: ashupod1
+  namespace: ashuk8s1 # using this namespace to create pod 
+spec:
+  containers:
+  - image: ubuntu
+    name: ashupod1
+    command: ["sh","-c","sleep 10000"]
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1
+  namespace: ashuk8s1 # using this namespace to create pod 
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30091 # static choosing nodeport 
+  selector:
+    app: ashusvc1
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+
+### perform and finish 
+
+```
+
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  po -n ashuk8s1 
+NAME       READY   STATUS    RESTARTS   AGE
+ashupod1   1/1     Running   0          98s
+[ashu@docker-server k8s-app-deploy]$ ls
+app.yaml  ashupod1.yaml  autopod.yaml  mytasks.yaml  nodeportsvc.yaml  task1.yaml  webapp.yaml
+[ashu@docker-server k8s-app-deploy]$ kubectl  cp  mytasks.yaml  ashupod1:/tmp/ -n ashuk8s1 
+[ashu@docker-server k8s-app-deploy]$ kubectl delete -f mytasks.yaml 
+namespace "ashuk8s1" deleted
+pod "ashupod1" deleted
+service "ashusvc1" deleted
+
+
+
+```
