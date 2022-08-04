@@ -220,3 +220,49 @@ ashuwebapp       1/1     Running   0          25s
 ====
 <img src="svc2.png">
 
+### creating nodeport serivce using existing running pod 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl expose pod ashuwebapp  --type NodePort --port 80 --name ashusvc1  --dry-run=client -o yaml 
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashuwebapp
+  name: ashusvc1
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: ashuwebapp
+  type: NodePort
+status:
+  loadBalancer: {}
+[ashu@docker-server k8s-app-deploy]$ kubectl expose pod ashuwebapp  --type NodePort --port 80 --name ashusvc1  --dry-run=client -o yaml  >nodeportsvc.yaml 
+```
+
+### Nodeport understnading 
+
+<img src="np.png">
+
+###
+
+```
+10  kubectl expose pod ashuwebapp  --type NodePort --port 80 --name ashusvc1  --dry-run=client -o yaml  >nodeportsvc.yaml 
+  411  ls
+  412  kubectl apply -f nodeportsvc.yaml 
+  
+  [ashu@docker-server ~]$ kubectl  get  svc 
+NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+ankitsvc1      NodePort    10.102.189.75    <none>        80:32465/TCP   42s
+ashusvc1       NodePort    10.109.174.159   <none>        80:31797/TCP   110s
+kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP        6h9m
+namansvc1      NodePort    10.103.168.41    <none>        80:31838/TCP   85s
+priyankasvc1   NodePort    10.104.192.196   <none>        80:30832/TCP   82s
+sureshsvc1     NodePort    10.102.253.174   <none>        80:30603/TCP   34s
+udaysvc1       NodePort    10.104.76.165    <none>        80:30430/TCP   92s
+```
+
