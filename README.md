@@ -167,3 +167,56 @@ status: {}
   392  kubectl exec -it  ashutoshhpod1 --  sh -c 'echo hello  >>/opt/logs.txt'
   393  kubectl exec -it ashutoshhpod1 -- cat /opt/logs.txt 
 ```
+
+### pod networking 
+
+<img src="podnet.png">
+
+### deploy docker image as webapp
+
+```
+kubectl run ashuwebapp --image=dockerashu/ashucustomer:v1   --port 80 --dry-run=client -o yaml >webapp.yaml 
+```
+
+### changes in yaml by adding enV section 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashuwebapp
+  name: ashuwebapp
+spec:
+  containers:
+  - image: dockerashu/ashucustomer:v1
+    name: ashuwebapp
+    ports:
+    - containerPort: 80
+    resources: {}
+    env: # for placing value of ENV variable
+    - name: deploy # name of env in Docker image 
+      value: webapp2 # value to deploy app 2 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+====
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f  webapp.yaml 
+pod/ashuwebapp created
+[ashu@docker-server k8s-app-deploy]$ kubectl  get po 
+NAME             READY   STATUS    RESTARTS   AGE
+ashuwebapp       1/1     Running   0          25s
+```
+
+### to access app runnng inside k8s we need below given resoures 
+
+<img src="netdev.png">
+
+### service and understanding and its types
+
+<img src="svc1.png">
+====
+<img src="svc2.png">
+
