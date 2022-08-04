@@ -87,4 +87,16 @@ udaypod1   0/1     ContainerCreating   0          1s
 [ashu@docker-server k8s-app-deploy]$ 
 ```
 
+### deleting all pods 
+
+```
+[ashu@docker-server ~]$ kubectl delete pods --all
+pod "ankitpod2" deleted
+pod "ashupod1" deleted
+pod "namanpod1" deleted
+pod "namanpodalt" deleted
+pod "priyampod1" deleted
+
+```
+
 
