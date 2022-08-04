@@ -266,3 +266,7 @@ sureshsvc1     NodePort    10.102.253.174   <none>        80:30603/TCP   34s
 udaysvc1       NodePort    10.104.76.165    <none>        80:30430/TCP   92s
 ```
 
+### Nodeport once more 
+
+<img src="np1.png">
+
