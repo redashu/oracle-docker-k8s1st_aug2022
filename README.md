@@ -453,6 +453,109 @@ namespace "ashuk8s1" deleted
 pod "ashupod1" deleted
 service "ashusvc1" deleted
 
+```
+
+### problems with pod 
+
+<img src="probpod.png">
+
+### Replication controllers in k8s 
+
+<img src="rc.png">
+
+### RC 
+
+<img src="rc1.png">
+
+### Example 1 of RC
+
+```
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: ashu-rc-1
+  namespace: ashu-project # name of namespace 
+spec:
+  replicas: 1 # number of pod
+  template:  # will use template to create pods 
+    metadata:
+      labels:
+        run: ashuwebapp
+    spec:
+      containers:
+      - image: dockerashu/ashucustomer:v1
+        name: ashuwebapp
+        ports:
+        - containerPort: 80
+        resources: {}
+        env: # for placing value of ENV variable
+        - name: deploy # name of env in Docker image 
+          value: webapp1 # value to deploy app 2
+```
+
+
+### creating 
+
+```
+ 462  kubectl  cp  mytasks.yaml  ashupod1:/tmp/ -n ashuk8s1 
+  463  kubectl delete -f mytasks.yaml 
+  464  kubectl  get ns
+  465  kubectl apply -f  rc.yaml 
+  466  kubectl  get  rc 
+  467  kubectl  get  po 
+  468  kubectl describe  po ashu-rc-1-2gh7n 
+  469  history 
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  po 
+NAME              READY   STATUS              RESTARTS   AGE
+ashu-rc-1-2gh7n   0/1     ContainerCreating   0          51s
+[ashu@docker-server k8s-app-deploy]$ 
+```
+
+###  creating nodeport service using rc 
+
+```
+ashu@docker-server ~]$ kubectl  get  rc
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   1         1         1       7m36s
+[ashu@docker-server ~]$ kubectl  expose rc  ashu-rc-1  --type NodePort --port 80 --name ashusvc2
+service/ashusvc2 exposed
+[ashu@docker-server ~]$ kubectl get  svc
+NAME       TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+ashusvc2   NodePort   10.98.29.155   <none>        80:30656/TCP   4s
+[ashu@docker-server ~]$ 
 
 
 ```
+
+
+###  scaling horizentally pod 
+
+```
+[ashu@docker-server ~]$ kubectl  get  rc
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   1         1         1       13m
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl scale replicationcontroller  ashu-rc-1  --replicas 3 
+replicationcontroller/ashu-rc-1 scaled
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl  get  rc
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   3         3         3       13m
+[ashu@docker-server ~]$ kubectl  get  po -owide
+NAME              READY   STATUS    RESTARTS   AGE     IP                NODE    NOMINATED NODE   READINESS GATES
+ashu-rc-1-5x4vs   1/1     Running   0          7m36s   192.168.104.9     node2   <none>           <none>
+ashu-rc-1-lt9rz   1/1     Running   0          10s     192.168.104.14    node2   <none>           <none>
+ashu-rc-1-tw2rq   1/1     Running   0          10s     192.168.166.139   node1   <none>           <none>
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl  get  svc
+NAME       TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+ashusvc2   NodePort   10.98.29.155   <none>        80:30656/TCP   5m53s
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl  get  ep
+NAME       ENDPOINTS                                               AGE
+ashusvc2   192.168.104.14:80,192.168.104.9:80,192.168.166.139:80   5m58s
+```
+
+
+
