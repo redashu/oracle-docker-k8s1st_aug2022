@@ -270,3 +270,33 @@ udaysvc1       NodePort    10.104.76.165    <none>        80:30430/TCP   92s
 
 <img src="np1.png">
 
+### namespaces in k8s
+
+```
+[ashu@docker-server ~]$ kubectl  get   namespaces 
+NAME                   STATUS   AGE
+default                Active   6h42m
+kube-node-lease        Active   6h42m
+kube-public            Active   6h42m
+kube-system            Active   6h42m
+kubernetes-dashboard   Active   6h39m
+[ashu@docker-server ~]$ kubectl  get  pods
+No resources found in default namespace.
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl create namespace  ashu-project 
+namespace/ashu-project created
+[ashu@docker-server ~]$ kubectl config set-context --current --namespace ashu-project 
+Context "kubernetes-admin@kubernetes" modified.
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl get  pods
+No resources found in ashu-project namespace.
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl get  ns
+NAME                   STATUS   AGE
+ashu-project           Active   69s
+default                Active   6h44m
+kube-node-lease        Active   6h44m
+kube-public            Active   6h44m
+```
+
