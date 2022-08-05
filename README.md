@@ -242,6 +242,111 @@ internlb1   NodePort   10.100.47.166   <none>        80:32163/TCP   3s
 
 <img src="dep.png">
 
+## Deployment of database 
+
+### creating secret in a YAML file for db password store
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl create secret generic db-password --from-literal  passkey="Cisco800Db"  --dry-run=client -o yaml >dbsecret.yaml 
+[ashu@docker-server k8s-app-deploy]$ cat dbsecret.yaml 
+apiVersion: v1
+data:
+  passkey: Q2lzY284MDBEYg==
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: db-password
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f dbsecret.yaml -n tasks
+secret/db-password created
+[ashu@docker-server k8s-app-deploy]$ kubectl  get secret  -n tasks 
+NAME             TYPE                             DATA   AGE
+ashuimg-secret   kubernetes.io/dockerconfigjson   1      46m
+db-password      Opaque                           1      5s
+[ashu@docker-server k8s-app-deploy]$ 
+```
+
+###  creating deployment 
+
+```
+kubectl create deployment  ashudb --image=mysql:5.6 --port 3306  --namespace tasks --dry-run=client -o yaml >dbdeploy.yaml
+```
+
+### YAML file 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb
+  namespace: tasks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashudb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashudb
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        ports:
+        - containerPort: 3306
+        env: 
+        - name: MYSQL_ROOT_PASSWORD # using 
+          valueFrom: # reading password from some ref 
+            secretKeyRef: # secret 
+              name: db-password
+              key: passkey
+        resources: {}
+status: {}
+
+```
+
+### deploy it 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f dbdeploy.yaml 
+deployment.apps/ashudb configured
+[ashu@docker-server k8s-app-deploy]$ 
+[ashu@docker-server k8s-app-deploy]$ kubectl get deploy -n tasks 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ankit-dep1     1/1     1            1           14m
+ashudb         1/1     1            1           7m47s
+```
+
+### creating service 
+
+```
+[ashu@docker-server ~]$ kubectl  get deploy  -n tasks 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ankit-dep1     1/1     1            1           25m
+ashudb         1/1     1            1           19m
+meenadb        1/1     1            1           15m
+priyankadep1   1/1     1            1           35m
+someshdb       1/1     1            1           15m
+sudha-dep1     1/1     1            1           33m
+sureshdep1     1/1     1            1           17m
+udaydb         1/1     1            1           8m16s
+veda-dep2      1/1     1            1           41m
+[ashu@docker-server ~]$ kubectl -n tasks   expose deployment ashudb --type ClusterIP --port 3306  --name ashudbsvc1 
+service/ashudbsvc1 exposed
+[ashu@docker-server ~]$ kubectl get svc -n tasks 
+NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+ashudbsvc1       ClusterIP   10.100.62.105    <none>        3306/TCP   6s
+mysqllb1         ClusterIP   10.97.196.123    <none>        80/TCP     40m
+priyankadep1     ClusterIP   10.107.162.140   <none>        3306/TCP   32m
+suresh-cip-svc   ClusterIP   10.98.77.133     <none>        6666/TCP   18m
+[ashu@docker-server ~]$ 
 
 
 
+
+```
