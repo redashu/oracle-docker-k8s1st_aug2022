@@ -347,6 +347,108 @@ suresh-cip-svc   ClusterIP   10.98.77.133     <none>        6666/TCP   18m
 [ashu@docker-server ~]$ 
 
 
+```
+
+### Deploy dashboard 
+
+```
+[ashu@docker-server ~]$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+deployment.apps/dashboard-metrics-scraper created
+[ashu@docker-server ~]$ 
 
 
 ```
+
+### verify the same 
+
+```
+[ashu@docker-server ~]$ kubectl get deployments.apps  -n kubernetes-dashboard 
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+dashboard-metrics-scraper   1/1     1            1           86s
+kubernetes-dashboard        1/1     1            1           86s
+[ashu@docker-server ~]$ kubectl get svc -n kubernetes-dashboard 
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+dashboard-metrics-scraper   ClusterIP   10.110.190.93    <none>        8000/TCP   107s
+kubernetes-dashboard        ClusterIP   10.107.255.172   <none>        443/TCP    108s
+[ashu@docker-server ~]$ kubectl get secret  -n kubernetes-dashboard 
+NAME                              TYPE     DATA   AGE
+kubernetes-dashboard-certs        Opaque   0      2m5s
+kubernetes-dashboard-csrf         Opaque   1      2m5s
+kubernetes-dashboard-key-holder   Opaque   2      2m4s
+[ashu@docker-server ~]$ 
+[ashu@docker-server ~]$ kubectl edit  svc kubernetes-dashboard    -n kubernetes-dashboard 
+service/kubernetes-dashboard edited
+[ashu@docker-server ~]$ kubectl get svc -n kubernetes-dashboard 
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)         AGE
+dashboard-metrics-scraper   ClusterIP   10.110.190.93    <none>        8000/TCP        3m9s
+kubernetes-dashboard        NodePort    10.107.255.172   <none>        443:31857/TCP   3m10s
+[ashu@docker-server ~]$ 
+
+```
+
+### from k8s 1.24 onwards by default there is not default secret for dashbaord service account 
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dash-secret 
+  annotations:
+    kubernetes.io/service-account.name: "kubernetes-dashboard"
+  namespace: kubernetes-dashboard
+type: kubernetes.io/service-account-token 
+```
+
+### 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f dashboard-token.yaml 
+secret/dash-secret created
+[ashu@docker-server k8s-app-deploy]$ kubectl get secrets -n kubernetes-dashboard 
+NAME                              TYPE                                  DATA   AGE
+dash-secret                       kubernetes.io/service-account-token   3      59s
+```
+
+### getting the token of service account 
+
+```
+[ashu@docker-server ~]$ kubectl describe secret  dash-secret   -n kubernetes-dashboard 
+Name:         dash-secret
+Namespace:    kubernetes-dashboard
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: kubernetes-dashboard
+              kubernetes.io/service-account.uid: 3a24a8e4-b90b-4e1b-8ca8-d226a4e25115
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1099 bytes
+namespace:  20 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IktTUjJPUTBzUVd4b3otMnpRSUdsa1FPcWl0b2JnMnVVZTBKMlpsX2twdzQifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiO
+```
+
+### by default dashboard is not having any power to access resources 
+
+```
+[ashu@docker-server ~]$ kubectl create clusterrolebinding xyz --clusterrole cluster-admin --serviceaccount=kubernetes-dashboard:kubernetes-dashboard
+clusterrolebinding.rbac.authorization.k8s.io/xyz created
+[ashu@docker-server ~]$ 
+
+```
+
+
+
