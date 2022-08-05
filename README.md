@@ -167,3 +167,81 @@ ashusvc3   NodePort   10.107.95.81   <none>        80:32726/TCP   4s
 
 ```
 
+### Deployment  resource in kubernetes 
+
+```
+kubectl create deployment  ashu-dep1 --image=phx.ocir.io/axmbtg8judkl/customerapp:1.0  --port 80 --dry-run=client -o yaml >deploy.yaml 
+```
+
+### YAML after secret insertition 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashu-dep1
+  name: ashu-dep1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashu-dep1
+  strategy: {}
+  template: # deployment will be using template to create pods
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashu-dep1
+    spec:
+      imagePullSecrets: # to call secret 
+      - name: ashuimg-secret 
+      containers:
+      - image: phx.ocir.io/axmbtg8judkl/customerapp:1.0
+        name: customerapp
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+
+```
+
+### deploy it 
+
+```
+[ashu@docker-server k8s-app-deploy]$ kubectl apply -f deploy.yaml 
+deployment.apps/ashu-dep1 created
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  deploy 
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-dep1   1/1     1            1           4s
+[ashu@docker-server k8s-app-deploy]$ kubectl  get  po
+NAME                         READY   STATUS    RESTARTS   AGE
+ashu-dep1-7f4785657f-bv2ww   1/1     Running   0          14s
+[ashu@docker-server k8s-app-deploy]$ 
+
+
+```
+
+### exposing nodeport service 
+
+```
+ashu@docker-server k8s-app-deploy]$ kubectl  get  deploy 
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-dep1   1/1     1            1           36s
+[ashu@docker-server k8s-app-deploy]$ kubectl expose deployment ashu-dep1 --type NodePort --port 80 --name internlb1   --dry-run=client -o yaml  >np1.yaml 
+[ashu@docker-server k8s-app-deploy]$ kubectl  apply -f np1.yaml 
+service/internlb1 created
+[ashu@docker-server k8s-app-deploy]$ kubectl  get svc
+NAME        TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+internlb1   NodePort   10.100.47.166   <none>        80:32163/TCP   3s
+[ashu@docker-server k8s-app-deploy]$ 
+```
+
+### RC & RS. vs Deployment 
+
+<img src="dep.png">
+
+
+
+
